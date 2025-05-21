@@ -1,0 +1,70 @@
+"Start Symbol" = <program>
+
+!---------------- Terminals ----------------
+
+Id = [_]|{letter}{Alphanumeric}*
+Digit = ('+'|'-')?{digit}+('.'{digit}+)?(('e'|'E')('+'|'-')?{digit}+)? 
+
+!---------------- Rules ----------------
+
+<program> ::= Begin <stmt_list> Done
+
+<stmt_list> ::= <concept>
+              | <concept> <stmt_list>
+
+<concept> ::= <assign>
+            | <if_stmt>
+            | <for_stmt>
+
+!---------------- Assignment----------------
+
+<assign> ::= <id> '=' <expr>
+
+<id> ::= Id
+
+!---------------- Expressions ----------------
+
+<expr> ::= <expr> '+' <term>
+        | <expr> '-' <term>
+        | <term>
+
+<term> ::= <term> '*' <factor>
+        | <term> '/' <factor>
+        | <term> '%' <factor>
+        | <factor>
+
+<factor> ::= <factor> '**' <exp>
+           | <exp>
+
+<exp> ::= '(' <expr> ')'
+        | <id>
+        | <digit>
+
+<digit> ::= Digit
+
+!---------------- Conditionals----------------
+
+<if_stmt> ::= check '(' <cond> ')' Begin <stmt_list> Done
+            | check '(' <cond> ')' Begin <stmt_list> Done else Begin <stmt_list> Done
+
+<cond> ::= <expr> <op> <expr>
+
+<op> ::= '<'
+       | '>'
+       | '=='
+       | '!='
+
+!---------------- Loop ----------------
+
+<for_stmt> ::= loop <data> <id> from <expr> to <expr> step <step> do Begin <stmt_list> Done
+
+<data> ::= 'num'
+         | 'dec'
+         | 'text'
+         | 'word'
+
+<step> ::= '--' <id>
+         | <id> '--'
+         | '++' <id>
+         | <id> '++'
+         | <assign>
